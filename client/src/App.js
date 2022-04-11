@@ -85,6 +85,8 @@ export default function App() {
 
 			console.log("Connected", accounts[0]);
 			setCurrentAccount(accounts[0]);
+			// get all Waves
+			getAllWaves();
 		} catch (error) {
 			console.log(error)
 		}
