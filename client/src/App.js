@@ -128,38 +128,36 @@ export default function App() {
 		}
 	}
 
-	useEffect(() => {
-		checkIfWalletIsConnected();
-	}, [])
 
 	useEffect(() => {
-		let wavePortalContract;
+		checkIfWalletIsConnected();
+		// let wavePortalContract;
 	
-		const onNewWave = (from, timestamp, message) => {
-			console.log("NewWave", from, timestamp, message);
-			setAllWaves(prevState => [
-				...prevState,
-				{
-					address: from,
-					timestamp: new Date(BigNumber.from(timestamp._hex).toNumber() * 1000),
-					message: message,
-				},
-			]);
-		};
+		// const onNewWave = (from, timestamp, message) => {
+    //   console.log("New Event", from, timestamp, message);
+    //   setAllWaves(prevState => [
+    //     ...prevState,
+    //    {
+    //     address: from,
+    //     timestamp: new Date(timestamp * 1000),
+    //     message: message, 
+    //   },
+    //   ]);
+    // }
 	
-		if (window.ethereum) {
-			const provider = new ethers.providers.Web3Provider(window.ethereum);
-			const signer = provider.getSigner();
+		// if (window.ethereum) {
+		// 	const provider = new ethers.providers.Web3Provider(window.ethereum);
+		// 	const signer = provider.getSigner();
 	
-			wavePortalContract = new ethers.Contract(contractAddress, WavePortal.abi, signer);
-			wavePortalContract.on("NewWave", onNewWave);
-		}
+		// 	wavePortalContract = new ethers.Contract(contractAddress, WavePortal.abi, signer);
+		// 	wavePortalContract.on("NewWave", onNewWave);
+		// }
 	
-		return () => {
-			if (wavePortalContract) {
-				wavePortalContract.off("NewWave", onNewWave);
-			}
-		};
+		// return () => {
+		// 	if (wavePortalContract) {
+		// 		wavePortalContract.off("NewWave", onNewWave);
+		// 	}
+		// };
 	}, []);
 	return (
 		<div className="mainContainer">
@@ -188,14 +186,28 @@ export default function App() {
 					</button>
 				)}
 
-				{allWaves.map((wave, index) => {
-					return (
-						<div key={index} style={{ backgroundColor: "OldLace", marginTop: "16px", padding: "8px" }}>
-							<div>Address: {wave.address}</div>
-							<div>Time: {wave.timestamp.toString()}</div>
-							<div>Message: {wave.message}</div>
-						</div>)
-				})}
+				<div className="header-2">
+					🙋‍♂️🙋‍♀️ Past Waves
+				</div>
+				<table className="message-table">
+					<tr>
+						<th>Address</th>
+						<th>Time</th>
+						<th>Message</th>
+					</tr>
+					{allWaves.map((wave, index) => {
+						return (
+							<tr>
+								<td>
+									<a target="_blank" href={"https://rinkeby.etherscan.io/address/" + wave.address}>
+										{wave.address.substring(0,5) + "..." + wave.address.substring(wave.address.length - 4)}
+									</a>
+								</td>
+								<td>{wave.timestamp.toString()}</td>
+								<td>{wave.message}</td>
+							</tr>)
+					})}
+				</table>
 			</div>
 		</div>
 	);
